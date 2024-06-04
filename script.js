@@ -10,19 +10,13 @@
                 cell.setAttribute('id', cellId)
                 cell.classList.add('cell');
                 cell.addEventListener('click', () => {
-                    GameBoard.setGameBoard(MapTiles.getMapping(cellId), "X");
-                    markDiv(cellId);
+                    GameController.markTile(cellId);
                 })
                 grid.appendChild(cell);
             }
         }
 
-        const markDiv = (pos) => {
-            let tile = document.getElementById(pos);
-            let value = document.createElement('p');
-            value.textContent = GameBoard.getGameBoardTile(MapTiles.getMapping(pos));
-            tile.appendChild(value);
-        }
+        
 
         return { createDiv }
     })();
@@ -90,4 +84,63 @@
     window.onload = () => {
         initFunctions.forEach(fn => fn());
     }
+
+    // turns
+    const GameController = (() => {
+
+        let isTurn = true;
+
+        const getIsTurn = () => {
+            return isTurn;
+        }
+
+        const changeTurn = () => {
+            isTurn = !isTurn;
+        }
+
+        const markTile = (cellId) => {
+            let XorO = "O";
+            if (getIsTurn()) {
+                XorO = "X";
+            } else {
+                XorO = "O";
+            }
+            changeTurn();
+            GameBoard.setGameBoard(MapTiles.getMapping(cellId), XorO);
+            markDiv(cellId);
+        }
+
+        const markDiv = (pos) => {
+            let tile = document.getElementById(pos);
+            let value = document.createElement('p');
+            value.textContent = GameBoard.getGameBoardTile(MapTiles.getMapping(pos));
+            tile.appendChild(value);
+        }
+
+        const checkMovesLeft = () => {
+            
+        }
+
+        return { getIsTurn, changeTurn, markTile }
+
+    }) ();
+    window.GameController = GameController;
+
+    // player
+    const Player = (() => {
+
+    }) ();
+
+    // ai
+    const Ai = (() => {
+
+        const findBestMove = () => {
+
+        };
+
+        const miniMax = () => {
+
+        }
+    }) ();
+
 })();
