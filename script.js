@@ -83,6 +83,7 @@
     const GameController = (() => {
 
         let isTurn = true;
+        let gameActive = true;
 
         const getIsTurn = () => {
             return isTurn;
@@ -93,13 +94,14 @@
         }
 
         const markTile = (cellId) => {
-            if (document.getElementById(cellId).innerText !== '') return; // Prevent marking an already marked tile
+            if (!gameActive || document.getElementById(cellId).innerText !== '') return; // Prevent marking an already marked tile or if game is over
 
             let XorO = isTurn ? "X" : "O";
             GameBoard.setGameBoard(MapTiles.getMapping(cellId), XorO);
             markDiv(cellId);
             if (checkIfWin()) {
                 console.log(`Player with symbol ${XorO} wins!`);
+                stopGame();
                 return;
             }
             changeTurn();
@@ -111,6 +113,7 @@
                 markDiv(cellId);
                 if (checkIfWin()) {
                     console.log(`Player with symbol O wins!`);
+                    stopGame();
                 }
                 changeTurn();
             }
@@ -159,7 +162,12 @@
             return checker;
         };
 
-        return { getIsTurn, changeTurn, markTile, checkIfWin }
+        const stopGame = () => {
+            gameActive = false;
+            console.log("Game stopped.");
+        }
+
+        return { getIsTurn, changeTurn, markTile, checkIfWin, stopGame }
 
     })();
     window.GameController = GameController;
